@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    // Module system options
+    "module": "nodenext", // Use Node.js module system (ESM/CJS auto-detection)
+    "moduleResolution": "nodenext", // Resolve modules using Node.js rules
+    "resolvePackageJsonExports": true, // Use package.json "exports" field
+
+    // Interop and compatibility
+    "esModuleInterop": true, // Enables default imports from CommonJS modules
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules without default export
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+
+    // Output options
+    "declaration": true, // Generate .d.ts files
+    "removeComments": true, // Remove comments from output
+    "sourceMap": true, // Generate source maps
+    "outDir": "./dist", // Output directory
+
+    // Decorator support
+    "emitDecoratorMetadata": true, // Emit decorator metadata
+    "experimentalDecorators": true, // Enable experimental decorator support
+
+    // Language and target options
+    "target": "ES2023", // Set JavaScript language version
+    "baseUrl": "./", // Base directory for module resolution
+
+    // Build performance
+    "incremental": true, // Enable incremental compilation
+
+    // Type checking options
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "strictNullChecks": true, // Enable strict null checks
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file naming
+
+    // Strictness options
+    "noImplicitAny": false, // Allow variables with implicit 'any' type
+    "strictBindCallApply": false, // Disable strict checking for bind/call/apply methods
+    "noFallthroughCasesInSwitch": false // Allow fallthrough cases in switch statements
+  }
+}

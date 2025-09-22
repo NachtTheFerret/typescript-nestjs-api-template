@@ -1,0 +1,45 @@
+import { Injectable } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { OnModuleDestroy, OnModuleInit } from '@nestjs/common/interfaces';
+import { Logger } from '@nestjs/common';
+import { withAccelerate } from '@prisma/extension-accelerate';
+
+const options: Prisma.Subset<Prisma.PrismaClientOptions, Prisma.PrismaClientOptions> = {
+  log: ['query', 'info', 'warn', 'error'], // Enable query logging for debugging
+  errorFormat: 'pretty', // Use pretty error format for better readability
+
+  omit: {
+    user: {
+      password: true, // Always omit the password field from user queries
+    },
+  },
+};
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(PrismaService.name);
+
+  constructor() {
+    super(options);
+
+    this.logger.log('PrismaService initialized');
+  }
+
+  public async onModuleInit() {
+    await this.$connect(); // Ensure connection when the module is initialized
+
+    this.logger.log('PrismaService connected to the database');
+  }
+
+  public async onModuleDestroy() {
+    await this.$disconnect(); // Ensure disconnection when the module is destroyed
+
+    this.logger.log('PrismaService disconnected from the database');
+  }
+
+  public extendedPrismaClient() {
+    // Extend the Prisma Client with the Accelerate extension
+    return this.$extends(withAccelerate());
+  }
+}
