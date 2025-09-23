@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '@prisma/client';
-import { AuthInfoLocal } from 'src/types/express';
+import { AuthInfoLocal } from '../../types/fastity';
 
 /**
  * Local strategy for username/password authentication

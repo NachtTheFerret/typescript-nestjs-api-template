@@ -4,7 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JWT_SECRET } from './constants';
 import { JwtPayload } from './auth.service';
 import { User } from '@prisma/client';
-import { AuthInfoJwt } from 'src/types/express';
+import { AuthInfoJwt } from '../../types/fastity';
 import { UserService } from '../users/user.service';
 
 /**

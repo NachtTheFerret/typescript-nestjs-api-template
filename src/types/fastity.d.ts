@@ -12,8 +12,8 @@ interface AuthInfoLocal {
 
 type AuthInfo = AuthInfoJwt | AuthInfoLocal;
 
-declare module 'express' {
-  interface Request {
+declare module 'fastify' {
+  interface FastifyRequest {
     user?: User;
     authInfo?: AuthInfo;
   }
