@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from '../../services/prisma.service';
-import { UserModule } from '../users/user.module';
+import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JWT_EXPIRATION, JWT_SECRET } from './constants';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 
-const USER_EMAIL = 'support@example.com';
+const USER_USERNAME = 'support';
 const USER_PASSWORD = 'securepassword';
 
 describe('AuthService', () => {
@@ -39,23 +39,23 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('should validate user with correct credentials', async () => {
-      const user = await service.validateUser(USER_EMAIL, USER_PASSWORD);
+      const user = await service.validate(USER_USERNAME, USER_PASSWORD);
       expect(user).toBeDefined();
-      expect(user.email).toBe(USER_EMAIL);
+      expect(user.username).toBe(USER_USERNAME);
     });
 
     it('should throw UnauthorizedException with incorrect credentials', async () => {
-      await expect(service.validateUser(USER_EMAIL, 'wrongpassword')).rejects.toThrow('Invalid credentials');
+      await expect(service.validate(USER_USERNAME, 'wrongpassword')).rejects.toThrow('Invalid credentials');
     });
 
     it('should throw UnauthorizedException with non-existing user', async () => {
-      await expect(service.validateUser('nonexistent@example.com', 'password')).rejects.toThrow('Invalid credentials');
+      await expect(service.validate('nonexistent@example.com', 'password')).rejects.toThrow('Invalid credentials');
     });
   });
 
   describe('login', () => {
     it('should return a JWT token on login', async () => {
-      const user = await service.validateUser(USER_EMAIL, USER_PASSWORD);
+      const user = await service.validate(USER_USERNAME, USER_PASSWORD);
       const token = await service.login(user.id);
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');

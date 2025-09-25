@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from '../../services/prisma.service';
-import { UserModule } from '../users/user.module';
+import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JWT_EXPIRATION, JWT_SECRET } from './constants';
 import { LocalStrategy } from './local.strategy';
@@ -47,7 +47,7 @@ describe('AuthController', () => {
     });
 
     it('should get a token on login', async () => {
-      const user = await service.validateUser(USER_EMAIL, USER_PASSWORD);
+      const user = await service.validateUserPassword(USER_EMAIL, USER_PASSWORD);
 
       jest.spyOn(controller, 'login').mockImplementation(async () => {
         const token = await service.login(user.id);
@@ -67,7 +67,7 @@ describe('AuthController', () => {
     });
 
     it('should return user profile', async () => {
-      const user = await service.validateUser(USER_EMAIL, USER_PASSWORD);
+      const user = await service.validate(USER_EMAIL, USER_PASSWORD);
       jest.spyOn(controller, 'getProfile').mockImplementation(() => user);
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

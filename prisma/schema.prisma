@@ -9,9 +9,30 @@ generator client {
 
 model User {
   id        String   @id @default(uuid())
-  email     String   @unique
+  username  String   @unique
   password  String
+  tfa       Boolean  @default(false) // Whether 2FA is enabled
+  tfaSecret String?  // Secret key for 2FA (if enabled)
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  sessions  Session[] 
+
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  ip        String?
+  userAgent String?
+  device    String?
+  code      String   @unique
+
+  lastTfaAt DateTime? // Timestamp of the last successful 2FA verification
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiredAt DateTime?
+  
+  user      User     @relation(fields: [userId], references: [id])
 }
