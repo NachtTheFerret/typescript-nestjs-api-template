@@ -5,7 +5,9 @@ import bcrypt from 'bcrypt';
 import { UserEntityService } from '../../services/prisma/entities/user-entity.service';
 import { SessionEntityService } from '../../services/prisma/entities/session-entity.service';
 import type { JwtPayload, LoginSessionMetadata } from '../../types';
-import { BCRYPT_SALT_ROUNDS } from 'src/constants';
+import { BCRYPT_SALT_ROUNDS } from '../../constants';
+import { JWT_ACCESS_EXPIRATION, JWT_REFRESH_EXPIRATION } from './constants';
+import { Duration } from '../../utils/duration';
 
 @Injectable()
 export class AuthService {
@@ -51,6 +53,12 @@ export class AuthService {
      */
     const accessToken = await this.generateJwtToken({ sub: user.id, type: 'access', state: session.state });
     const refreshToken = await this.generateJwtToken({ sub: user.id, type: 'refresh', state: session.state });
+
+    /** Renew the session's expiration if applicable */
+    if (session.expiredAt) {
+      const newExpiredAt = new Date(Date.now() + Duration.inMilliseconds(JWT_REFRESH_EXPIRATION));
+      await this.sessionEntityService.update(session.id, { expiredAt: newExpiredAt });
+    }
 
     return { accessToken, refreshToken, session };
   }
@@ -117,6 +125,12 @@ export class AuthService {
       const accessToken = await this.generateJwtToken({ sub: user.id, type: 'access', state: newSessionState });
       const newRefreshToken = await this.generateJwtToken({ sub: user.id, type: 'refresh', state: newSessionState });
 
+      /** Renew the session's expiration if applicable */
+      if (session.expiredAt) {
+        const newExpiredAt = new Date(Date.now() + Duration.inMilliseconds(JWT_REFRESH_EXPIRATION));
+        await this.sessionEntityService.update(session.id, { expiredAt: newExpiredAt });
+      }
+
       return { accessToken, refreshToken: newRefreshToken, session };
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
@@ -162,6 +176,7 @@ export class AuthService {
    */
   public async generateJwtToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): Promise<string> {
     const iat = Math.floor(Date.now() / 1000);
-    return this.jwtService.signAsync({ ...payload, iat });
+    const expiresIn = payload.type === 'access' ? JWT_ACCESS_EXPIRATION : JWT_REFRESH_EXPIRATION;
+    return this.jwtService.signAsync({ ...payload, iat }, { expiresIn });
   }
 }
