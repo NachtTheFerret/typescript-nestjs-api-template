@@ -19,6 +19,19 @@ model User {
 
   sessions  Session[] 
 
+  TwoFactorAuthSetup TwoFactorAuthSetup?
+}
+
+model TwoFactorAuthSetup {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  secret    String   // Secret key for 2FA setup
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // expiredAt DateTime? // Optional expiration for the setup process
+
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Session {
@@ -27,7 +40,7 @@ model Session {
   ip        String?
   userAgent String?
   device    String?
-  code      String   @unique
+  state     String   @unique // Unique state for session identification
 
   lastTfaAt DateTime? // Timestamp of the last successful 2FA verification
   createdAt DateTime @default(now())

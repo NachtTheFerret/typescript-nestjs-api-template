@@ -1,13 +1,15 @@
 import type { Session, User } from '@prisma/client';
-import type { JwtPayload } from 'src/rest/auth/auth.service';
+import type { JwtPayload } from 'src/_OLD/rest/auth/auth.service';
 
 interface AuthInfoJwt {
   type: 'jwt';
   payload: JwtPayload;
+  tfa: boolean;
 }
 
 interface AuthInfoLocal {
   type: 'local';
+  tfa: boolean;
 }
 
 type AuthInfo = AuthInfoJwt | AuthInfoLocal;

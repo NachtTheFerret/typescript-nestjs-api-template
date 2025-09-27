@@ -22,5 +22,11 @@
       "foreground": "#f44336",
       "background": "#592c2c"
     }
-  }
+  },
+
+  "code-runner.executorMap": {
+    "typescript": "npx ts-node"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true
 }

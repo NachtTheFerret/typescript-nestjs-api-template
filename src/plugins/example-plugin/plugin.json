@@ -1,0 +1,6 @@
+{
+  "name": "example-plugin",
+  "version": "1.0.0",
+  "description": "An example plugin for demonstration purposes.",
+  "main": "index.ts"
+}

@@ -7,7 +7,7 @@ async function main() {
   const seeds = {
     user: {
       items: [
-        { username: 'admin', password: await bcrypt.hash('securepassword', 10), tfa: true },
+        { username: 'admin', password: await bcrypt.hash('securepassword', 10) },
         { username: 'support', password: await bcrypt.hash('securepassword', 10) },
         { username: 'user', password: await bcrypt.hash('securepassword', 10) },
       ],

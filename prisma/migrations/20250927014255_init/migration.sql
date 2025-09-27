@@ -12,13 +12,24 @@ CREATE TABLE "public"."User" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."TwoFactorAuthSetup" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "secret" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TwoFactorAuthSetup_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."Session" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "ip" TEXT,
     "userAgent" TEXT,
     "device" TEXT,
-    "code" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
     "lastTfaAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -31,7 +42,10 @@ CREATE TABLE "public"."Session" (
 CREATE UNIQUE INDEX "User_username_key" ON "public"."User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_code_key" ON "public"."Session"("code");
+CREATE UNIQUE INDEX "TwoFactorAuthSetup_userId_key" ON "public"."TwoFactorAuthSetup"("userId");
+
+-- AddForeignKey
+ALTER TABLE "public"."TwoFactorAuthSetup" ADD CONSTRAINT "TwoFactorAuthSetup_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

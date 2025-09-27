@@ -1,0 +1,9 @@
+[ ] Vérifier tout les fichier .spec.ts qu'ils prennent bien en compte toute les méthodes
+[ ] Faire le système de refresh token
+[ ] Terminer le 2fa et testé à fond 
+[ ] Vérifier toute les variables d'env qu'elles soit bien dans les fichiers contants et inversement
+[ ] Mettre les dossiers session et two-factor-auth-setup dans le dossier auth
+[ ] Faire une meilleure gestion d'erreur
+[ ] Faire une meillre gestion des réponses
+[ ] Faire tout ce qu'il faut pour l'api swagger, sur les dto également
+[ ] A la fin du dev du 2fa, mettre le 2fa et les sessions en tant que plugins. Et faire un plugins manager pour les inclures s'ils sont présent dans le code

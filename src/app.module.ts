@@ -1,16 +1,28 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PrismaModule } from './services/prisma/prisma.module';
 import { UserModule } from './rest/user/user.module';
 import { AuthModule } from './rest/auth/auth.module';
-import { PrismaService } from './services/prisma.service';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './rest/auth/jwt-auth.guard';
-import { SessionModule } from './rest/session/session.module';
 
 @Module({
-  imports: [UserModule, AuthModule, SessionModule],
+  imports: [
+    /** Prisma integration module with global scope */
+    PrismaModule,
+
+    /** Event Emitter module with global scope */
+    EventEmitterModule.forRoot({
+      global: true,
+      wildcard: true,
+      delimiter: '.',
+    }),
+
+    /** Application modules */
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [AppService],
 })
 export class AppModule {}

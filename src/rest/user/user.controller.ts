@@ -1,28 +1,25 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
+import { Pagination } from 'src/global/decorators/pagination.decorator';
+import { PaginationDto } from 'src/global/dto/pagination.dto';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  public async list(@Query('offset') offset?: string, @Query('limit') limit?: string) {
-    const take = limit ? parseInt(limit, 10) : undefined;
-    const skip = offset ? parseInt(offset, 10) : undefined;
-    const items = await this.userService.findMany({}, { take, skip });
+  public async list(@Pagination() pagination: PaginationDto) {
+    const items = await this.userService.list(pagination);
     const total = await this.userService.count();
 
     return {
       metadata: {
-        offset: skip,
-        limit: take,
-        count: items.length,
         total,
+        offset: pagination.offset,
+        limit: pagination.limit,
+        count: items.length,
       },
       items,
-      message: 'Users retrieved successfully',
-      status: 200,
+      message: 'User list fetched successfully',
     };
   }
 }
