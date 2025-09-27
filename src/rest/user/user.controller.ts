@@ -1,12 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Pagination } from 'src/global/decorators/pagination.decorator';
 import { PaginationDto } from 'src/global/dto/pagination.dto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
   public async list(@Pagination() pagination: PaginationDto) {
     const items = await this.userService.list(pagination);
     const total = await this.userService.count();

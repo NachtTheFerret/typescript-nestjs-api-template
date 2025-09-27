@@ -1,6 +1,6 @@
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class AuthSignupDto {
   @IsString()
   @Matches(/^[a-z][a-z0-9_]*[a-z0-9]$/, {
     message:

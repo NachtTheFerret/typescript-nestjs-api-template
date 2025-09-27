@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { APP_GUARD } from '@nestjs/core';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './rest/auth/jwt-auth.guard';
+
 import { PrismaModule } from './services/prisma/prisma.module';
 import { UserModule } from './rest/user/user.module';
 import { AuthModule } from './rest/auth/auth.module';
@@ -23,6 +27,11 @@ import { AuthModule } from './rest/auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+
+    /** Global JWT Auth Guard */
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+  ],
 })
 export class AppModule {}

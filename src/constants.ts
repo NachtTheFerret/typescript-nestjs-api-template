@@ -11,3 +11,6 @@ export const APP_ISSUER = process.env.APP_ISSUER || 'NachtTheFerret';
 
 // Server configuration
 export const DEFAULT_PORT = process.env.PORT || 3000;
+
+// Bcrypt configuration
+export const BCRYPT_SALT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS ? parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) : 10;
