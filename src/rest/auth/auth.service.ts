@@ -102,6 +102,13 @@ export class AuthService {
         throw new UnauthorizedException('Session has expired');
       }
 
+      /** If the refresh token has expired, delete the session and throw an error */
+      const now = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp < now) {
+        await this.sessionEntityService.delete(session.id);
+        throw new UnauthorizedException('Refresh token has expired');
+      }
+
       /** Generate a new session state to invalidate old tokens */
       const newSessionState = await this.generateSessionState(user.id);
       await this.sessionEntityService.update(session.id, { state: newSessionState });
